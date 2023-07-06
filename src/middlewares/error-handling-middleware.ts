@@ -6,7 +6,7 @@ export function handleApplicationErrors(
   err: ApplicationError | Error,
   _req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) {
   if (err.name === 'CannotEnrollBeforeStartDateError') {
     return res.status(httpStatus.BAD_REQUEST).send({
@@ -21,6 +21,12 @@ export function handleApplicationErrors(
   }
 
   if (err.name === 'InvalidCredentialsError') {
+    return res.status(httpStatus.UNAUTHORIZED).send({
+      message: err.message,
+    });
+  }
+
+  if (err.name === 'UnauthorizedError') {
     return res.status(httpStatus.UNAUTHORIZED).send({
       message: err.message,
     });
